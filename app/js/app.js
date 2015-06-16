@@ -6,20 +6,44 @@ var trace = function(){
   }
 };
 
-var App = App || {};
+var App = (function(){
 
-App.square = function(x){
-  return x * x;
-};
+  var init = function(){
+    trace(greet('Liz Vanderkloot'));
 
-App.cube = function(x){
-  return x * x * x;
-};
+    $('select#year').on('change', function(){
+      yearChange(this);
+    });
 
-App.greet = function(string){
-  return typeof string !== 'undefined' ? 'Hello ' + string : 'Hello World';
-};
+    $('select#make').on('change', function(){});
+
+    $('select#model').on('change', function(){});
+
+    $.getJSON('../data/years.json',function(data){
+      $(data).each(function(){
+        var option = $('<option>');
+        option.text(this).val(this).appendTo('select#year');
+      });
+    });
+  };
+
+  var yearChange = function(select){
+    $.getJSON('../data/makes-'+select.value+'.json',function(data){trace(data)});
+  };
+
+  var makeChange = function(select){};
+
+  var modelChange = function(select){};
+
+  var greet = function(string){
+    return typeof string !== 'undefined' ? 'Hello ' + string : 'Hello World';
+  };
+
+  return {
+    init: init
+  };
+})(App = App || {});
 
 $(document).ready(function(){
-  trace('hello world');
+  App.init();
 });
